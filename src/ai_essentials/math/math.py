@@ -31,17 +31,12 @@ def matmul(a, b):
         raise ValueError("Columns in a must match rows in b")
 
     aRows = len(a)
-    aCols_bRows = len(a[0])
     bCols = len(b[0])
 
     result = [[0] * bCols for _ in range(aRows)]
 
     for i in range(aRows):
         for j in range(bCols):
-            sum = 0
-            for t in range(aCols_bRows):
-                sum += a[i][t] * b[t][j]
-
-            result[i][j] = sum
+            result[i][j] = dot(a[i], get_column(b, j))
 
     return result

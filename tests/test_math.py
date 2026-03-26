@@ -17,6 +17,12 @@ def test_column():
     assert get_column(a, 0) == [1, 3]
     assert get_column(a, 1) == [2, 4] 
     
+def test_dot():
+    """Test the dot function."""
+    a = [1, 2]
+    b = [3, 4]
+    assert dot(a, b) == 11
+    
 def test_matmul():
     """Test the matmul function."""
     a = [[1, 2], [3, 4]]
