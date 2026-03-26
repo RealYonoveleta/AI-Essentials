@@ -1,5 +1,6 @@
 from ai_essentials.math import *
 
+
 def test_shape():
     """Test the get_shape function."""
     a = [[1, 2], [3, 4]]
