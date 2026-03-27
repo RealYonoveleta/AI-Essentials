@@ -1,6 +1,11 @@
-from ai_essentials.layer import Layer
+from ai_essentials.value import Value
 
 
-layer = Layer(4, 3)
+x = Value(2.0)
+y = Value(3.0)
+z = x * y
+out = z + 2.0
+out.backward()
 
-print(layer([1.0, 0.4, -0.8]))
+print(x.grad)  # should be 3.0
+print(y.grad)  # should be 2.0
