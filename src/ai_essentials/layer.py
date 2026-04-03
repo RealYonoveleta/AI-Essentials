@@ -7,4 +7,7 @@ class Layer:
 
     def __call__(self, x):
         return [neuron(x) for neuron in self.neurons]
+
+    def parameters(self):
+        return [p for neuron in self.neurons for p in neuron.parameters()]
             

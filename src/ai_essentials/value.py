@@ -1,6 +1,14 @@
 import math
 
 
+def to_value(x):
+    return x if isinstance(x, Value) else Value(x)
+
+
+def to_values(xs):
+    return [to_value(x) for x in xs]
+
+
 class Value:
     def __init__(self, data, _children=(), _op=""):
         self.data = data
@@ -10,7 +18,7 @@ class Value:
         self._op = _op
 
     def _wrap(self, other):
-        return other if isinstance(other, Value) else Value(other)
+        return to_value(other)
 
     def __add__(self, other):
         other = self._wrap(other)

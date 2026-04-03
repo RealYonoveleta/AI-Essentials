@@ -1,5 +1,5 @@
 from ai_essentials.math import get_shape
-import math
+from ai_essentials.value import Value, to_values
 
 
 def check_loss_inputs(predictions, targets):
@@ -15,19 +15,29 @@ def check_loss_inputs(predictions, targets):
 def mse_loss(predictions, targets):
     """
     Mean Squared Error Loss.
+    predictions and targets: lists of Value objects or scalars
     """
     check_loss_inputs(predictions, targets)
 
-    return sum((p - t) ** 2 for p, t in zip(predictions, targets)) / len(predictions)
+    predictions = to_values(predictions)
+    targets = to_values(targets)
+
+    return sum((p - t) ** 2 for p, t in zip(predictions, targets)) * (1 / len(predictions))
 
 
 def cross_entropy(predictions, targets):
     """
     Binary Cross Entropy Loss.
+    predictions: list of Value objects or scalars (predicted probabilities in (0, 1))
+    targets: list of Value objects or scalars (true labels: 0 or 1)
     """
     check_loss_inputs(predictions, targets)
-    eps = 1e-12
-    return -sum(
-        t * math.log(max(min(p, 1 - eps), eps)) + (1 - t) * math.log(max(min(1 - p, 1 - eps), eps))
+
+    predictions = to_values(predictions)
+    targets = to_values(targets)
+
+    loss = sum(
+        t * p.log() + (1 - t) * (1 - p).log()
         for p, t in zip(predictions, targets)
-    ) / len(predictions)
+    )
+    return loss * (-1 / len(predictions))
