@@ -40,6 +40,17 @@ class Value:
 
         out._backward = _backward
         return out
+
+    def log(self, eps=1e-12):
+        val = max(self.data, eps)
+        l = math.log(val)
+        out = Value(l, (self,), "log")
+
+        def _backward():
+            self.grad += (1 / val) * out.grad
+
+        out._backward = _backward
+        return out
         
     def backward(self):
         topo = []

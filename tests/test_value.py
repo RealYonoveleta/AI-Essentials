@@ -2,6 +2,7 @@ import math
 import pytest
 from ai_essentials.value import Value
 
+
 def test_value_addition():
     a = Value(2.0)
     b = Value(3.0)
@@ -10,6 +11,7 @@ def test_value_addition():
     c.backward()
     assert a.grad == 1.0
     assert b.grad == 1.0
+
 
 def test_value_multiplication():
     a = Value(2.0)
@@ -20,6 +22,7 @@ def test_value_multiplication():
     assert a.grad == 3.0
     assert b.grad == 2.0
 
+
 def test_value_addition_with_scalar():
     a = Value(2.0)
     c = a + 5
@@ -27,12 +30,14 @@ def test_value_addition_with_scalar():
     c.backward()
     assert a.grad == 1.0
 
+
 def test_value_multiplication_with_scalar():
     a = Value(2.0)
     c = a * 4
     assert c.data == 8.0
     c.backward()
     assert a.grad == 4.0
+
 
 def test_chain_operations():
     a = Value(2.0)
@@ -46,11 +51,13 @@ def test_chain_operations():
     assert a.grad == 3.0
     assert b.grad == 2.0 + 1.0
 
+
 def test_tanh_forward():
     a = Value(0.5)
     t = math.tanh(0.5)
     out = a.tanh()
     assert pytest.approx(out.data, rel=1e-6) == t
+
 
 def test_tanh_backward():
     a = Value(0.5)
@@ -58,6 +65,7 @@ def test_tanh_backward():
     out.backward()
     expected_grad = 1 - math.tanh(0.5) ** 2
     assert pytest.approx(a.grad, rel=1e-6) == expected_grad
+
 
 def test_backward_topological_order():
     # Test that backward works for a small graph
@@ -71,6 +79,7 @@ def test_backward_topological_order():
     # dd/db = a
     assert a.grad == 3.0 + 1.0
     assert b.grad == 2.0
+
 
 def test_grad_accumulation():
     # Test that gradients accumulate properly
@@ -86,6 +95,7 @@ def test_grad_accumulation():
     assert a.grad == 2 * 3.0
     assert b.grad == 2 * 2.0
 
+
 def test_repr_and_op():
     a = Value(1.0)
     b = Value(2.0)
@@ -95,3 +105,35 @@ def test_repr_and_op():
     assert d._op == "*"
     assert isinstance(c._prev, set)
     assert isinstance(d._prev, set)
+
+
+def test_log_forward():
+    v = Value(math.e)
+    out = v.log()
+    assert pytest.approx(out.data, rel=1e-9) == 1.0
+
+
+def test_log_backward():
+    v = Value(math.e)
+    out = v.log()
+    out.backward()
+    # d/dx log(x) at x=e is 1/e
+    assert pytest.approx(v.grad, rel=1e-9) == 1 / math.e
+
+
+def test_log_zero():
+    v = Value(0.0)
+    out = v.log()
+    # Should not be -inf or error, should use epsilon
+    assert math.isfinite(out.data)
+    out.backward()
+    assert math.isfinite(v.grad)
+
+
+def test_log_negative():
+    v = Value(-5.0)
+    out = v.log()
+    # Should use epsilon, not math domain error
+    assert math.isfinite(out.data)
+    out.backward()
+    assert math.isfinite(v.grad)

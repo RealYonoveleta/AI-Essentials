@@ -1,7 +1,15 @@
-def get_shape(a):
-    """Return the shape of a as a tuple (rows, columns)"""
+from turtle import shape
 
-    return len(a), len(a[0]) if a else 0
+
+def get_shape(a):
+    """Return the shape of a as a tuple for n-dimensional arrays."""
+
+    shape = []
+    while isinstance(a, list):
+        shape.append(len(a))
+        a = a[0] if a else []
+
+    return tuple(shape)
 
 def get_row(a, i=0):
     """Return the i-th row of a"""
