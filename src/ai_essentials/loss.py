@@ -22,7 +22,9 @@ def mse_loss(predictions, targets):
     predictions = to_values(predictions)
     targets = to_values(targets)
 
-    return sum((p - t) ** 2 for p, t in zip(predictions, targets)) * (1 / len(predictions))
+    return sum(((p - t) ** 2 for p, t in zip(predictions, targets)), Value(0.0)) * (
+        1 / len(predictions)
+    )
 
 
 def cross_entropy(predictions, targets):
@@ -37,7 +39,7 @@ def cross_entropy(predictions, targets):
     targets = to_values(targets)
 
     loss = sum(
-        t * p.log() + (1 - t) * (1 - p).log()
-        for p, t in zip(predictions, targets)
+        (t * p.log() + (1 - t) * (1 - p).log() for p, t in zip(predictions, targets)),
+        Value(0.0),
     )
     return loss * (-1 / len(predictions))
