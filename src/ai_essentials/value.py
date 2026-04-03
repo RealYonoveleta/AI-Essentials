@@ -9,8 +9,11 @@ class Value:
         self._prev = set(_children)
         self._op = _op
 
+    def _wrap(self, other):
+        return other if isinstance(other, Value) else Value(other)
+
     def __add__(self, other):
-        other = other if isinstance(other, Value) else Value(other)
+        other = self._wrap(other)
         out = Value(self.data + other.data, (self, other), "+")
 
         def _backward():
@@ -21,7 +24,7 @@ class Value:
         return out
 
     def __mul__(self, other):
-        other = other if isinstance(other, Value) else Value(other)
+        other = self._wrap(other)
         out = Value(self.data * other.data, (self, other), "*")
 
         def _backward():
@@ -30,6 +33,37 @@ class Value:
 
         out._backward = _backward
         return out
+
+    def __pow__(self, n):
+        if not isinstance(n, (int, float)):
+            raise ValueError(f"Power must be a scalar, got {type(n).__name__}")
+        out = Value(self.data ** n, (self,), f"**{n}")
+
+        def _backward():
+            self.grad += n * (self.data ** (n - 1)) * out.grad
+
+        out._backward = _backward
+        return out
+
+    def __neg__(self):
+        return self * -1
+
+    def __sub__(self, other):
+        other = self._wrap(other)
+        return self + (-other)
+
+    def __radd__(self, other):
+        return self + other
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __rsub__(self, other):
+        return Value(other) + (-self)
+
+    def __truediv__(self, other):
+        other = self._wrap(other)
+        return self * other ** -1
 
     def tanh(self):
         t = math.tanh(self.data)
