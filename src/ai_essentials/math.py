@@ -1,6 +1,3 @@
-from turtle import shape
-
-
 def get_shape(a):
     """Return the shape of a as a tuple for n-dimensional arrays."""
 

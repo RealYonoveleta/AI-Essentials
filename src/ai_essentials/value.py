@@ -83,6 +83,15 @@ class Value:
         out._backward = _backward
         return out
 
+    def relu(self):
+        out = Value(max(0.0, self.data), (self,), "relu")
+
+        def _backward():
+            self.grad += (1.0 if self.data > 0 else 0.0) * out.grad
+
+        out._backward = _backward
+        return out
+
     def log(self, eps=1e-12):
         val = max(self.data, eps)
         l = math.log(val)

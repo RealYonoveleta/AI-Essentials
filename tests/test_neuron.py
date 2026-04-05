@@ -1,5 +1,4 @@
 import pytest
-from math import tanh
 from ai_essentials.neuron import Neuron
 from ai_essentials.value import Value
 
@@ -28,7 +27,7 @@ def test_neuron_call(monkeypatch):
     n.b = Value(0.3)
     x = [1.0, 2.0]
     result = n(x)
-    expected = tanh(2.0 + 0.3)
+    expected = max(0.0, 2.0 + 0.3)  # relu: z = dot(w,x) + b = 2.0 + 0.3
     assert isinstance(result, Value)
     assert result.data == pytest.approx(expected)
 

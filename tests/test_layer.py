@@ -3,7 +3,7 @@ from ai_essentials.layer import Layer
 
 class DummyNeuron:
     """A deterministic neuron for testing."""
-    def __init__(self, num_inputs):
+    def __init__(self, num_inputs, activation=None):
         self.num_inputs = num_inputs
         self.called_with = []
 
