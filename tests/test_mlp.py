@@ -1,4 +1,3 @@
-import pytest
 from ai_essentials.mlp import MLP
 from ai_essentials.layer import Layer
 from ai_essentials.loss import mse_loss
@@ -6,6 +5,7 @@ from ai_essentials.value import Value
 
 
 # ── Structure tests ──────────────────────────────────────────────────────────
+
 
 def test_mlp_initializes_correct_number_of_layers():
     mlp = MLP(4, [5, 3, 2])
@@ -39,6 +39,7 @@ def test_mlp_all_parameters_are_values():
 
 # ── Forward pass tests ───────────────────────────────────────────────────────
 
+
 def test_mlp_output_is_list_of_values():
     mlp = MLP(2, [3, 1])
     out = mlp([1.0, 2.0])
@@ -69,6 +70,7 @@ def test_mlp_output_is_bounded_by_tanh():
 
 # ── Backward pass tests ──────────────────────────────────────────────────────
 
+
 def test_mlp_backward_populates_gradients():
     mlp = MLP(2, [3, 1])
     loss = mse_loss(mlp([1.0, -1.0]), [0.5])
@@ -84,6 +86,7 @@ def test_mlp_all_parameters_receive_gradients():
 
 
 # ── Integration test: training scenario ─────────────────────────────────────
+
 
 def test_mlp_loss_decreases_after_gradient_step():
     """
@@ -107,4 +110,3 @@ def test_mlp_loss_decreases_after_gradient_step():
     loss_after = mse_loss(mlp(x), y_true)
 
     assert loss_after.data < loss_before.data
-
