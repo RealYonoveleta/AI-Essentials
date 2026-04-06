@@ -22,12 +22,16 @@ def test_dot():
     """Test the dot function."""
     a = [1, 2]
     b = [3, 4]
-    assert dot(a, b) == 11
+    result = dot(a, b)
+    assert result.data == 11
     
 def test_matmul():
     """Test the matmul function."""
     a = [[1, 2], [3, 4]]
     b = [[5, 6], [7, 8]]
     expected = [[19, 22], [43, 50]]
-    assert matmul(a, b) == expected
+    result = matmul(a, b)
+    for i in range(len(expected)):
+        for j in range(len(expected[0])):
+            assert result[i][j].data == expected[i][j]
     

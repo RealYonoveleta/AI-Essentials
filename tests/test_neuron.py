@@ -17,7 +17,7 @@ def test_neuron_initialization(monkeypatch):
     assert all(isinstance(w, Value) for w in n.w)
     assert all(w.data == 0.5 for w in n.w)
     assert isinstance(n.b, Value)
-    assert n.b.data == 0.5
+    assert n.b.data == 0.01  # relu default bias from activations registry
 
 
 def test_neuron_call(monkeypatch):

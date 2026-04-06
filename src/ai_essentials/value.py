@@ -45,9 +45,11 @@ class Value:
     def __pow__(self, n):
         if not isinstance(n, (int, float)):
             raise ValueError(f"Power must be a scalar, got {type(n).__name__}")
-        out = Value(self.data ** n, (self,), f"**{n}")
+        out = Value(self.data**n, (self,), f"**{n}")
 
         def _backward():
+            if self.data == 0 and n < 1:
+                return  # undefined gradient: zero base with fractional/negative exponent
             self.grad += n * (self.data ** (n - 1)) * out.grad
 
         out._backward = _backward
@@ -71,7 +73,7 @@ class Value:
 
     def __truediv__(self, other):
         other = self._wrap(other)
-        return self * other ** -1
+        return self * other**-1
 
     def tanh(self):
         t = math.tanh(self.data)
@@ -102,26 +104,23 @@ class Value:
 
         out._backward = _backward
         return out
-        
+
     def backward(self):
         topo = []
         visited = set()
-        
-        def build(v):
+        stack = [self]
+        # Iterative post-order traversal — avoids Python recursion limit on deep graphs
+        while stack:
+            v = stack[-1]
             if v not in visited:
                 visited.add(v)
                 for child in v._prev:
-                    build(child)
+                    if child not in visited:
+                        stack.append(child)
+            else:
+                stack.pop()
                 topo.append(v)
-                
-        build(self)
-        
-        self.grad = 1.0
-        r_topo = reversed(topo)
-        
-        for v in r_topo:
-            v._backward()
-                    
-        return r_topo
 
-    
+        self.grad = 1.0
+        for v in reversed(topo):
+            v._backward()

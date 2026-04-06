@@ -22,11 +22,12 @@ def get_column(a, j=0):
 
 def dot(a, b):
     """Calculate dot product between a and b"""
+    from ai_essentials.value import Value
 
     if len(a) != len(b):
         raise ValueError("a and b must have the same size")
 
-    return sum(x * y for x, y in zip(a, b))
+    return sum((x * y for x, y in zip(a, b)), Value(0.0))
 
 
 def matmul(a, b):

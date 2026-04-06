@@ -37,7 +37,7 @@ def test_mse_loss_shape_mismatch():
     """Test MSE loss raises error when shapes don't match."""
     predictions = [1.0, 2.0, 3.0]
     targets = [1.0, 2.0]
-    with pytest.raises(ValueError, match="Predictions and targets must have the same shape"):
+    with pytest.raises(ValueError, match="Predictions and targets must have the same length"):
         mse_loss(predictions, targets)
 
 
@@ -98,5 +98,5 @@ def test_cross_entropy_empty_lists():
 
 def test_cross_entropy_shape_mismatch():
     """Test cross entropy raises error when shapes don't match."""
-    with pytest.raises(ValueError, match="Predictions and targets must have the same shape"):
+    with pytest.raises(ValueError, match="Predictions and targets must have the same length"):
         cross_entropy([0.5, 0.5], [1.0])

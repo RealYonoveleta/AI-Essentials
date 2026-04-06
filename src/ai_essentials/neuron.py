@@ -6,10 +6,11 @@ from ai_essentials.activations import get_activation
 
 
 class Neuron:
-    def __init__(self, num_inputs, activation='relu'):
-        self.w = [Value(random.uniform(-1, 1)) for _ in range(num_inputs)]
-        self.b = Value(random.uniform(-1, 1))
-        self.activation = get_activation(activation)
+    def __init__(self, num_inputs, activation='relu', bias_init=None):
+        scale = (2.0 / num_inputs) ** 0.5 if num_inputs > 0 else 1.0  # He initialization
+        self.w = [Value(random.uniform(-scale, scale)) for _ in range(num_inputs)]
+        self.activation, default_bias = get_activation(activation)
+        self.b = Value(bias_init if bias_init is not None else default_bias)
 
     def __call__(self, x):
         x = [to_value(v) for v in x]

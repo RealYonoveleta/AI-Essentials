@@ -1,4 +1,3 @@
-from ai_essentials.math import get_shape
 from ai_essentials.value import Value, to_values
 
 
@@ -8,8 +7,11 @@ def check_loss_inputs(predictions, targets):
     if not predictions or not targets:
         raise ValueError("Predictions and targets must not be empty")
 
-    if get_shape(predictions) != get_shape(targets):
-        raise ValueError("Predictions and targets must have the same shape.")
+    if len(predictions) != len(targets):
+        raise ValueError(
+            f"Predictions and targets must have the same length "
+            f"(got {len(predictions)} and {len(targets)})."
+        )
 
 
 def mse_loss(predictions, targets):
