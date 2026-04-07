@@ -22,6 +22,12 @@ class Optimizer:
 
 
 class SGD(Optimizer):
+    def __init__(self, parameters, lr=0.01, momentum=0.0):
+        super().__init__(parameters, lr)
+        self.momentum = momentum
+        self.velocity = [0.0] * len(self.parameters)
+
     def step(self):
-        for p in self.parameters:
-            p.data -= self.lr * p.grad
+        for i, p in enumerate(self.parameters):
+            self.velocity[i] = self.momentum * self.velocity[i] + p.grad
+            p.data -= self.lr * self.velocity[i]
